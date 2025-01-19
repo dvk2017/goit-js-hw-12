@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image gallary</title>
+     <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+
+    <main>
+      <div class="container">
+        <form>
+          <input class="query" type="text" name="query" id="" placeholder="Search images..."/>
+          <button class="btn" type="submit">Search</Search></button>
+        </form>
+        <p class="loading-message visually-hidden">Loading images, please wait...<span class="loader-bg"><span class="loader"></span></span></p>
+        <ul class="gallery"></ul>
+      </div>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
+

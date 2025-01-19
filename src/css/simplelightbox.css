@@ -1,0 +1,18 @@
+.sl-wrapper {
+  background-color: rgba(46, 47, 66, 0.8);
+}
+
+.sl-counter {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 16px !important;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #fff !important;
+}
+
+.sl-wrapper .sl-navigation button.sl-prev,
+.sl-wrapper .sl-navigation button.sl-next,
+.sl-wrapper button.sl-close {
+  color: #fff;
+}

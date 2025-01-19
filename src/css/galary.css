@@ -1,0 +1,81 @@
+@import url('../css/simplelightbox.css');
+@import url('./styles.css');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fafafa;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+ul {
+  list-style: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+a {
+  text-decoration: none;
+  color: currentColor;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 360px));
+  gap: 24px;
+  background-color: white;
+  padding: 24px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.gallery-item {
+  transition: transform 250ms ease-in-out;
+  border: 1px solid #808080;
+}
+
+.gallery-item:hover {
+  transform: scale(104%);
+}
+
+.gallery-link {
+  height: 152px;
+  display: flex;
+}
+
+.gallery-image {
+  object-fit: cover;
+  width: 100%;
+}
+
+.container {
+  text-align: center;
+}
+
+.img-prop-wrap {
+  display: flex;
+  justify-content: space-around;
+}
