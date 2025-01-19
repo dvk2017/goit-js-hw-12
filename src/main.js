@@ -15,6 +15,14 @@ let lightbox1 = new SimpleLightbox('.gallery .gallery-link', {
   /* options */
 });
 
+function loadingMessageOn() {
+  loadingMessage.classList.remove('visually-hidden');
+}
+
+function loadingMessageOff() {
+  loadingMessage.classList.add('visually-hidden');
+}
+
 function search(evt) {
   evt.preventDefault();
 
@@ -24,7 +32,7 @@ function search(evt) {
 
   marcupGallery.innerHTML = '';
 
-  loadingMessage.classList.remove('visually-hidden');
+  loadingMessageOn();
 
   fetchFromPxb(inputField.value)
     .then(ans => {
@@ -42,39 +50,41 @@ function search(evt) {
 
       lightbox1.refresh();
     })
-    .catch(err => {
-      if (err.message === 'noImagesMatching') {
-        iziToast.show({
-          messageColor: '#fff',
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-          timeout: 3000,
-          maxWidth: '432px',
-          messageSize: '16px',
-          icon: 'material-icons',
-          iconText: 'highlight_off',
-          iconColor: '#ffffff',
-          color: '#ef4040', // blue, red, green, yellow
-          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-        });
-      } else {
-        iziToast.show({
-          title: `${err}`,
-          titleColor: '#fff',
-          messageColor: '#fff',
-          message: 'Unable loading images',
-          timeout: 3000,
-          maxWidth: '432px',
-          messageSize: '16px',
-          icon: 'material-icons',
-          iconText: 'highlight_off',
-          iconColor: '#ffffff',
-          color: '#ef4040', // blue, red, green, yellow
-          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-        });
-      }
-    })
-    .finally(() => loadingMessage.classList.add('visually-hidden'));
+    .catch(showAlert)
+    .finally(loadingMessageOff);
+}
+
+function showAlert(err) {
+  if (err.message === 'noImagesMatching') {
+    iziToast.show({
+      messageColor: '#fff',
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+      timeout: 3000,
+      maxWidth: '432px',
+      messageSize: '16px',
+      icon: 'material-icons',
+      iconText: 'highlight_off',
+      iconColor: '#ffffff',
+      color: '#ef4040', // blue, red, green, yellow
+      position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+    });
+  } else {
+    iziToast.show({
+      title: `${err}`,
+      titleColor: '#fff',
+      messageColor: '#fff',
+      message: 'Unable loading images',
+      timeout: 3000,
+      maxWidth: '432px',
+      messageSize: '16px',
+      icon: 'material-icons',
+      iconText: 'highlight_off',
+      iconColor: '#ffffff',
+      color: '#ef4040', // blue, red, green, yellow
+      position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+    });
+  }
 }
 
 const form = document.querySelector('form');

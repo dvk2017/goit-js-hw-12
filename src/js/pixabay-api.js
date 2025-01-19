@@ -1,5 +1,5 @@
 export default function fetchFromPxb(query) {
-  const BASE_URL = 'https://pixabay.com/api/';
+  const BASE_URL = 'https://pixabay.com/api/+++';
   const API_KEY = '47762015-3b880641f1939f09591269c8d';
 
   const searchParams = new URLSearchParams({
