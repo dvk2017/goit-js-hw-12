@@ -7,7 +7,7 @@ export function showAlert(err) {
       messageColor: '#fff',
       message:
         'Sorry, there are no images matching your search query. Please try again!',
-      timeout: 0,
+      timeout: 5000,
       maxWidth: '432px',
       messageSize: '16px',
       icon: 'material-icons',
@@ -22,7 +22,7 @@ export function showAlert(err) {
       titleColor: '#fff',
       messageColor: '#fff',
       message: 'Unable loading images',
-      timeout: 0,
+      timeout: 5000,
       maxWidth: '432px',
       messageSize: '16px',
       icon: 'material-icons',
@@ -37,7 +37,7 @@ export function showAlert(err) {
 export function messageEndOfSearch() {
   iziToast.info({
     message: `We're sorry, but you've reached the end of search results.`,
-    timeout: 0,
+    timeout: 5000,
     maxWidth: '432px',
     messageSize: '16px',
     position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
