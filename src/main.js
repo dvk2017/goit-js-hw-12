@@ -1,9 +1,8 @@
-import fetchFromPxb from './js/pixabay-api.js';
+import { fetchFromPxb, PER_PAGE } from './js/pixabay-api.js';
 import makeMarkup from './js/render-functions.js';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+import { showAlert, messageEndOfSearch } from './js/messages.js';
 
 const inputField = document.querySelector('.query');
 const marcupGallery = document.querySelector('.gallery');
@@ -23,70 +22,93 @@ function loadingMessageOff() {
   loadingMessage.classList.add('visually-hidden');
 }
 
-function search(evt) {
+function loadMoreBtnOn() {
+  loadMoreBtn.classList.remove('visually-hidden');
+}
+
+function loadMoreBtnOff() {
+  loadMoreBtn.classList.add('visually-hidden');
+}
+
+function smoothScrollOnLoadMore() {
+  const card = document.querySelector('.gallery-item');
+  const cardHeight = card.getBoundingClientRect()['height'];
+  window.scrollBy({
+    top: 2 * cardHeight,
+    behavior: 'smooth',
+  });
+}
+
+let currentPage = 1;
+
+async function search(evt) {
   evt.preventDefault();
 
   if (inputField.value.trim() === '') {
     return;
   }
 
+  currentPage = 1;
   marcupGallery.innerHTML = '';
+  loadMoreBtnOff();
 
   loadingMessageOn();
 
-  fetchFromPxb(inputField.value)
-    .then(ans => {
-      inputField.value = '';
-      if (ans.hits.length === 0) {
-        throw new Error('noImagesMatching');
-      }
+  try {
+    const ans = await fetchFromPxb(inputField.value, currentPage);
 
-      return ans.hits;
-    })
-    .then(images => {
-      const markup = makeMarkup(images);
+    if (ans.hits.length === 0) {
+      throw new Error('noImagesMatching');
+    }
 
-      marcupGallery.insertAdjacentHTML('beforeend', markup);
+    if (ans.totalHits > ans.hits.length) {
+      loadMoreBtnOn();
+    }
 
-      lightbox1.refresh();
-    })
-    .catch(showAlert)
-    .finally(loadingMessageOff);
+    const images = ans.hits;
+    const markup = makeMarkup(images);
+
+    marcupGallery.insertAdjacentHTML('beforeend', markup);
+
+    lightbox1.refresh();
+  } catch (error) {
+    showAlert(error);
+  }
+  loadingMessageOff();
 }
 
-function showAlert(err) {
-  if (err.message === 'noImagesMatching') {
-    iziToast.show({
-      messageColor: '#fff',
-      message:
-        'Sorry, there are no images matching your search query. Please try again!',
-      timeout: 3000,
-      maxWidth: '432px',
-      messageSize: '16px',
-      icon: 'material-icons',
-      iconText: 'highlight_off',
-      iconColor: '#ffffff',
-      color: '#ef4040', // blue, red, green, yellow
-      position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-    });
-  } else {
-    iziToast.show({
-      title: `${err}`,
-      titleColor: '#fff',
-      messageColor: '#fff',
-      message: 'Unable loading images',
-      timeout: 3000,
-      maxWidth: '432px',
-      messageSize: '16px',
-      icon: 'material-icons',
-      iconText: 'highlight_off',
-      iconColor: '#ffffff',
-      color: '#ef4040', // blue, red, green, yellow
-      position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-    });
+async function loadMore() {
+  currentPage += 1;
+
+  loadMoreBtnOff();
+  loadingMessageOn();
+
+  try {
+    const ans = await fetchFromPxb(inputField.value, currentPage);
+    const images = ans.hits;
+    const markup = makeMarkup(images);
+
+    marcupGallery.insertAdjacentHTML('beforeend', markup);
+
+    lightbox1.refresh();
+
+    // autoscrol
+    smoothScrollOnLoadMore();
+
+    // check for collection end
+    if (ans.totalHits / PER_PAGE < currentPage) {
+      messageEndOfSearch();
+    } else {
+      loadMoreBtnOn();
+    }
+  } catch (error) {
+    showAlert(error);
   }
+  loadingMessageOff();
 }
 
 const form = document.querySelector('form');
+const loadMoreBtn = document.querySelector('.load-more-btn');
 
 form.addEventListener('submit', search);
+loadMoreBtn.addEventListener('click', loadMore);

@@ -1,19 +1,23 @@
-export default function fetchFromPxb(query) {
-  const BASE_URL = 'https://pixabay.com/api/+++';
+import axios from 'axios';
+
+export const PER_PAGE = 15;
+
+export async function fetchFromPxb(query, page) {
   const API_KEY = '47762015-3b880641f1939f09591269c8d';
+
+  axios.defaults.baseURL = 'https://pixabay.com';
 
   const searchParams = new URLSearchParams({
     key: API_KEY,
     q: query,
+    page: page,
+    per_page: PER_PAGE,
     image_type: 'photo',
     orientation: 'horizontal',
-    safesearch: true,
+    order: 'latest',
+    safesearch: false,
   });
 
-  return fetch(`${BASE_URL}?${searchParams}`).then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    return response.json();
-  });
+  const response = await axios.get(`/api/?${searchParams}`);
+  return response.data;
 }
